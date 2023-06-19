@@ -1,0 +1,22 @@
+{
+    "name": "saraf/async-request",
+    "description": "a wrapper around reactphp/http",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Saraf\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hasan Parasteh",
+            "email": "hasanparasteh@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "react/http": ">=1.6",
+        "react/promise": ">=2.10.0",
+        "react/async": "^4 || ^3 || ^2"
+    }
+}
