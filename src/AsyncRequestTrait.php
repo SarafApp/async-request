@@ -39,6 +39,13 @@ trait AsyncRequestTrait
         return $this;
     }
 
+    public function addHeaders(array $headers): void
+    {
+        foreach ($headers as $key => $value) {
+            $this->browser = $this->browser->withHeader($key, $value);
+        }
+    }
+
     public function setConfig(array $config): static
     {
         if (isset($config['timeout'])) {
