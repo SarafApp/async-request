@@ -33,7 +33,7 @@ trait AsyncRequestTrait
         return $this;
     }
 
-    public function setHeader(string $key, mixed $value): static
+    public function addHeader(string $key, mixed $value): static
     {
         $this->browser = $this->browser->withHeader($key, $value);
         return $this;
