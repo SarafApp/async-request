@@ -2,6 +2,7 @@
     "name": "saraf/async-request",
     "description": "a wrapper around reactphp/http",
     "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Saraf\\": "src/"
