@@ -2,12 +2,12 @@
 
 namespace Saraf;
 
+use React\Http\Browser;
+use React\Socket\Connector;
 use Saraf\ResponseHandlers\BasicHandler;
 use Saraf\ResponseHandlers\FileHandler;
 use Saraf\ResponseHandlers\HandlerEnum;
 use Saraf\ResponseHandlers\JsonHandler;
-use React\Http\Browser;
-use React\Socket\Connector;
 
 trait AsyncRequestTrait
 {
@@ -33,16 +33,16 @@ trait AsyncRequestTrait
         return $this;
     }
 
+    public function setHeader(string $key, mixed $value): static
+    {
+        $this->browser = $this->browser->withHeader($key, $value);
+        return $this;
+    }
+
     public function setConfig(array $config): static
     {
         if (isset($config['timeout'])) {
             $this->browser = $this->browser->withTimeout($config['timeout']);
-        }
-
-        if (isset($config['headers'])) {
-            foreach ($config['headers'] as $key => $value) {
-                $this->browser = $this->browser->withHeader($key, $value);
-            }
         }
 
         if (isset($config['baseURL'])) {
