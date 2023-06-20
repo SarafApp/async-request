@@ -19,7 +19,7 @@ class AsyncRequestJson extends Methods
     ]))
     {
         $this->responseHandler = JsonHandler::class;
-        $this->browser = (new Browser($connector));
+        $this->browser = (new Browser($connector))->withHeader('Content-Type', 'application/json');
     }
 
     public function post(string $path, array|string $body = [], array $headers = []): PromiseInterface
