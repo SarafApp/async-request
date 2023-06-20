@@ -14,7 +14,9 @@ trait AsyncRequestTrait
     use AsyncRequestPropertiesTrait;
 
     public function __construct(
-        Connector $connector = new Connector(['verify_peer' => false, 'verify_peer_name' => false]),
+        Connector $connector = new Connector([
+            "tls" => ['verify_peer' => false, 'verify_peer_name' => false]
+        ]),
     )
     {
         $this->browser = (new Browser($connector));
