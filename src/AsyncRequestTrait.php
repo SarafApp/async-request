@@ -60,6 +60,10 @@ trait AsyncRequestTrait
             $this->browser = $this->browser->withFollowRedirects($config['followRedirects']);
         }
 
+        if (isset($config['maxBufferSize'])) {
+            $this->browser = $this->browser->withResponseBuffer($config['maxBufferSize']);
+        }
+
         return $this;
     }
 }
