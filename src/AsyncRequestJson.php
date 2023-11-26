@@ -22,25 +22,33 @@ class AsyncRequestJson extends Methods
         $this->browser = (new Browser($connector))->withHeader('Content-Type', 'application/json');
     }
 
+    public function get(string $path, array $params = [], array $headers = []): PromiseInterface
+    {
+        return parent::get($this->path . $path, $params, $headers);
+    }
+
+    public function delete(string $path, array $params = [], array $headers = []): PromiseInterface
+    {
+        return parent::delete($this->path . $path, $params, $headers);
+    }
+
     public function post(string $path, array|string $body = [], array $headers = []): PromiseInterface
     {
-        return parent::post($path, Json::create($body), $headers);
+        return parent::post($this->path . $path, Json::create($body), $headers);
     }
 
     public function streaming(string|MethodsEnum $method, string $path, array|string $body = [], array $headers = []): PromiseInterface
     {
-        return parent::streaming($method, $path, Json::create($body), $headers);
+        return parent::streaming($method, $this->path . $path, Json::create($body), $headers);
     }
 
     public function put(string $path, array|string $body = [], array $headers = []): PromiseInterface
     {
-        return parent::put($path, Json::create($body), $headers);
+        return parent::put($this->path . $path, Json::create($body), $headers);
     }
 
     public function patch(string $path, array|string $body = [], array $headers = []): PromiseInterface
     {
-        return parent::patch($path, Json::create($body), $headers);
+        return parent::patch($this->path . $path, Json::create($body), $headers);
     }
-
-
 }
