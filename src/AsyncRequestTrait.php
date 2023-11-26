@@ -13,6 +13,8 @@ trait AsyncRequestTrait
 {
     use AsyncRequestPropertiesTrait;
 
+    private string $path = "";
+
     public function __construct(
         Connector $connector = new Connector([
             "tls" => ['verify_peer' => false, 'verify_peer_name' => false]
@@ -46,6 +48,9 @@ trait AsyncRequestTrait
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function setConfig(array $config): static
     {
         if (isset($config['timeout'])) {
@@ -53,7 +58,7 @@ trait AsyncRequestTrait
         }
 
         if (isset($config['baseURL'])) {
-            $this->browser = $this->browser->withBase($config['baseURL']);
+            $this->setBaseURL($config['baseURL']);
         }
 
         if (isset($config['followRedirects'])) {
@@ -65,5 +70,29 @@ trait AsyncRequestTrait
         }
 
         return $this;
+    }
+
+
+    /**
+     * This method ignores the query params in baseURL
+     * @param string $baseURL
+     * @throws \Exception
+     */
+    private function setBaseURL(string $baseURL): void
+    {
+        $url = parse_url($baseURL);
+        if (!isset($url['scheme'], $url['host'])) {
+            throw new \Exception("URL PARSER ERROR");
+        }
+
+        if (isset($url['path'])) {
+            $this->path = $url['path'];
+        }
+
+        $finalBaseURL = $url['scheme'] . "://" . $url['host'];
+        if (isset($url['port']))
+            $finalBaseURL .= ":" . $url['port'];
+
+        $this->browser = $this->browser->withBase($finalBaseURL);
     }
 }
