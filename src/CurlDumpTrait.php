@@ -10,18 +10,18 @@ trait CurlDumpTrait
      * @param string $method HTTP method (GET, POST, PUT, etc.)
      * @param string $path Request path (will be appended to baseURL)
      * @param array $headers Additional headers for this request
-     * @param string $body Request body (for POST, PUT, PATCH)
-     * @param array $params Query parameters (for GET, DELETE)
+     * @param array $body Request body (for POST, PUT, PATCH)
+     * @param array $queryParams Query parameters (for GET, DELETE)
      * @return string The curl command
      */
-    public function getCurl(string $method, string $path, array $headers = [], string $body = "", array $params = []): string
+    public function getCurl(string $method, string $path, array $headers = [], array $body = [], array $queryParams = []): string
     {
         // Build the full URL
         $fullPath = $this->path . $path;
         
         // Add query parameters for GET/DELETE requests
-        if (!empty($params) && in_array(strtoupper($method), ['GET', 'DELETE'])) {
-            $fullPath .= '?' . http_build_query($params);
+        if (!empty($queryParams) && in_array(strtoupper($method), ['GET', 'DELETE'])) {
+            $fullPath .= '?' . http_build_query($queryParams);
         }
         
         $baseUrl = $this->extractBaseUrlFromBrowser();
@@ -49,7 +49,8 @@ trait CurlDumpTrait
         
         // Add body if present
         if (!empty($body)) {
-            $curl .= " -d " . escapeshellarg($body);
+            $bodyString = is_array($body) ? json_encode($body) : $body;
+            $curl .= " -d " . escapeshellarg($bodyString);
         }
         
         // Add URL (always last)

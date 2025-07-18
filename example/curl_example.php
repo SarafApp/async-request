@@ -16,17 +16,17 @@ $api->addHeader("User-Agent", "AsyncRequest/1.0");
 // Generate curl commands for different request types
 
 // GET request with query parameters
-$getCurl = $api->getCurl('GET', '/posts', [], '', ['userId' => 1]);
+$getCurl = $api->getCurl('GET', '/posts', [], [], ['userId' => 1]);
 echo "GET Request:\n";
 echo $getCurl . "\n\n";
 
 // POST request with JSON body
-$postCurl = $api->getCurl('POST', '/posts', ['Content-Type' => 'application/json'], '{"title":"foo","body":"bar","userId":1}');
+$postCurl = $api->getCurl('POST', '/posts', ['Content-Type' => 'application/json'], ['title' => 'foo', 'body' => 'bar', 'userId' => 1]);
 echo "POST Request:\n";
 echo $postCurl . "\n\n";
 
 // PUT request
-$putCurl = $api->getCurl('PUT', '/posts/1', ['Content-Type' => 'application/json'], '{"id":1,"title":"updated","body":"updated","userId":1}');
+$putCurl = $api->getCurl('PUT', '/posts/1', ['Content-Type' => 'application/json'], ['id' => 1, 'title' => 'updated', 'body' => 'updated', 'userId' => 1]);
 echo "PUT Request:\n";
 echo $putCurl . "\n\n";
 
@@ -45,6 +45,6 @@ $jsonApi->setConfig([
 $jsonApi->addHeader("Authorization", "Bearer your-token");
 
 // Generate curl for JSON API request
-$jsonCurl = $jsonApi->getCurl('POST', '/users', [], '{"name":"John","email":"john@example.com"}');
+$jsonCurl = $jsonApi->getCurl('POST', '/users', [], ['name' => 'John', 'email' => 'john@example.com']);
 echo "JSON API Request:\n";
 echo $jsonCurl . "\n\n"; 
