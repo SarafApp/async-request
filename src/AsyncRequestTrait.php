@@ -14,6 +14,8 @@ trait AsyncRequestTrait
     use AsyncRequestPropertiesTrait;
 
     private string $path = "";
+    private string $baseURL = "";
+    private array $trackedHeaders = [];
 
     public function __construct(
         Connector $connector = new Connector([
@@ -38,6 +40,7 @@ trait AsyncRequestTrait
     public function addHeader(string $key, mixed $value): static
     {
         $this->browser = $this->browser->withHeader($key, $value);
+        $this->trackedHeaders[$key] = $value;
         return $this;
     }
 
@@ -45,6 +48,7 @@ trait AsyncRequestTrait
     {
         foreach ($headers as $key => $value) {
             $this->browser = $this->browser->withHeader($key, $value);
+            $this->trackedHeaders[$key] = $value;
         }
     }
 
@@ -93,6 +97,59 @@ trait AsyncRequestTrait
         if (isset($url['port']))
             $finalBaseURL .= ":" . $url['port'];
 
+        $this->baseURL = $finalBaseURL;
         $this->browser = $this->browser->withBase($finalBaseURL);
+    }
+
+    /**
+     * Generate a curl command for the given request parameters
+     * 
+     * @param string $method HTTP method (GET, POST, PUT, etc.)
+     * @param string $path Request path (will be appended to baseURL)
+     * @param array $headers Additional headers for this request
+     * @param string $body Request body (for POST, PUT, PATCH)
+     * @param array $params Query parameters (for GET, DELETE)
+     * @return string The curl command
+     */
+    public function generateCurlCommand(string $method, string $path, array $headers = [], string $body = "", array $params = []): string
+    {
+        // Build the full URL
+        $fullPath = $this->path . $path;
+        
+        // Add query parameters for GET/DELETE requests
+        if (!empty($params) && in_array(strtoupper($method), ['GET', 'DELETE'])) {
+            $fullPath .= '?' . http_build_query($params);
+        }
+        
+        $fullUrl = $this->baseURL . $fullPath;
+        
+        // Start building curl command
+        $curl = "curl";
+        
+        // Add method if not GET
+        if (strtoupper($method) !== 'GET') {
+            $curl .= " -X " . strtoupper($method);
+        }
+        
+        // Merge tracked headers with request-specific headers
+        $allHeaders = array_merge($this->trackedHeaders, $headers);
+        
+        // Add headers
+        foreach ($allHeaders as $key => $value) {
+            if (is_array($value)) {
+                $value = implode(', ', $value);
+            }
+            $curl .= " -H " . escapeshellarg($key . ": " . $value);
+        }
+        
+        // Add body if present
+        if (!empty($body)) {
+            $curl .= " -d " . escapeshellarg($body);
+        }
+        
+        // Add URL (always last)
+        $curl .= " " . escapeshellarg($fullUrl);
+        
+        return $curl;
     }
 }

@@ -20,6 +20,7 @@ class AsyncRequestJson extends Methods
     {
         $this->responseHandler = JsonHandler::class;
         $this->browser = (new Browser($connector))->withHeader('Content-Type', 'application/json');
+        $this->trackedHeaders['Content-Type'] = 'application/json';
     }
 
     public function get(string $path, array $params = [], array $headers = []): PromiseInterface
