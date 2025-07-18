@@ -15,3 +15,8 @@ $api->addHeader("Content-Type", "application/json");
 $api->get("/users")->then(function ($response) {
     echo json_encode($response);
 });
+
+$api->activateLogger();
+$api->get('/users', ['data' => 'ok'], ['Authorization' => 'hahaha token'])->then(function ($response) {
+    echo json_encode($response);
+});
