@@ -42,12 +42,12 @@ $api->setConfig([
 $api->addHeader("Authorization", "Bearer your-token");
 
 // Generate curl command for a POST request
-$curlCommand = $api->generateCurlCommand('POST', '/posts', [], '{"title":"foo","body":"bar","userId":1}');
+$curlCommand = $api->getCurl('POST', '/posts', [], '{"title":"foo","body":"bar","userId":1}');
 echo $curlCommand;
 // Output: curl -X POST -H 'Authorization: Bearer your-token' -d '{"title":"foo","body":"bar","userId":1}' 'https://jsonplaceholder.typicode.com/posts'
 
 // Generate curl command for a GET request with query parameters
-$curlCommand = $api->generateCurlCommand('GET', '/posts', [], '', ['userId' => 1]);
+$curlCommand = $api->getCurl('GET', '/posts', [], '', ['userId' => 1]);
 echo $curlCommand;
 // Output: curl -H 'Authorization: Bearer your-token' 'https://jsonplaceholder.typicode.com/posts?userId=1'
 ```
